@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual DOM Example</title>
+</head>
+
+<body>
+    <div id="container"></div>
+
+    <script type="module">
+        import { h, Component } from "./vdom.js";
+        import sanitizeHTML from "./sanitize.js";
+
+        // EXAMPLE: Simple component example
+        const container = document.getElementById("container");
+
+        const multiStateComponent = new Component({}, container, function () {
+            const [count, setCount] = this.useState(0);
+            const [text, setText] = this.useState("Hola!");
+
+            // EXAMPLE: useEffect example
+            this.useEffect(() => {
+                console.log("Count:", count);
+                return () => console.log("Componente desmontado");
+            }, [count]);
+
+            // EXAMPLE: complex child component example
+            let item = (i) => h("div", { style: "margin-top: 10px; padding: 10px; background: lightgreen;" }, [
+                h("h3", {}, "Item" + i),
+                h("p", {}, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt tincidunt. Donec nec nunc tincidunt, tincidunt nunc nec, tincidunt nunc."),
+            ]);
+
+            return h("div", { className: "div-main" }, [
+                // EXAMPLE: Conditional rendering
+                h("div", { style: "display: flex; gap: 14px; align-items: center;" }, [
+                    (count < 5 ? h("p", {}, `Contador: ${count}`) : h("p", {}, "Contador mayor a 5")),
+                    h("button", { onclick: () => setCount(count + 1) }, "+"),
+                    h("button", { onclick: () => setCount(count > 0 ? count - 1 : 0) }, "-"),
+                ]),
+
+                // EXAMPLE: List rendering
+                h("p", {}, `Texto: ${text}`),
+                h("div", {}, Array.from({ length: count * 100 }, (_, i) => item(i))),
+                h("button", { onclick: () => setCount(0) }, "Reset"),
+
+                // EXAMPLE: TEXT RENDERING
+                h("#html", {},
+                    sanitizeHTML(`<input id="hola" type="text" value="asd">`)
+                ),
+
+                // EXAMPLE: SERVER EVENT HANDLER
+                h("button", {
+                    style: "border-radius: 3px; border: 4px; display: block; margin-top: 10px; padding:10px",
+                    onclick: () => {
+                        setText(text + "!");
+                        this.setAction(
+                            "action",
+                            { id: this.id },
+                            data => console.log("EYYY: ", data)
+                        );
+                    }
+                }, "ACTION")
+            ]);
+        });
+    </script>
+    <style>
+        button {
+            padding: 10px, 0px;
+            border: none;
+            border-radius: 3px;
+            background: lightgray;
+            cursor: pointer;
+            height: fit-content;
+        }
+
+        .div-main {
+            margin-top: 10px;
+            padding: 10px;
+            background: lightblue;
+        }
+    </style>
+
+</body>
+
+</html>
