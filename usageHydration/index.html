@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div data-island="counter" data-props='{"initialCount": 10}'></div>
+
+
+    <script type="module">
+        import { h, Component } from "../vdom.js";
+
+        function hydrateComponent(name, ComponentClass) {
+            document.querySelectorAll(`[data-island="${name}"]`).forEach(el => {
+                const props = JSON.parse(el.dataset.props || "{}");
+                ComponentClass(props, el);
+            });
+        }
+
+        function lazyHydrate(name, importPath) {
+            document.querySelectorAll(`[data-island="${name}"]`).forEach(el => {
+                import(importPath).then(module => {
+                    hydrateComponent(name, module.default);
+                });
+            });
+        }
+
+        lazyHydrate("counter", "/usageHydration/generated/counter.js");
+    </script>
+</body>
+
+</html>
