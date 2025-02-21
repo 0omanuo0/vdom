@@ -235,7 +235,7 @@ class Component {
 
     update() {
         this.stateIndex = 0;
-        const newVnode = this.component_render();
+        const newVnode = this.component_render(this.props);
         this.vnode = patch(this.parent, this.vnode, newVnode);
 
         // Run effects after render
