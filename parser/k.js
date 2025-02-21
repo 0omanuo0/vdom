@@ -1,10 +1,11 @@
-import { h, Component } from "../vdom.js";
+import { h, Component } from "../../vdom.js";
 
 export default function Counter(props, el) {
     return new Component(props, el, function () {
 
     const [count, setCount] = this.useState(0);
 
+    const text = "Hola mundo";
 
     function decrement() {
         setCount(count - 1);
@@ -12,7 +13,7 @@ export default function Counter(props, el) {
     const Item = (props) => h("div", {}, [
         
         h("p", {}, [
-            props.a
+             props.a + props.b
         ])
     ])
 
@@ -25,21 +26,18 @@ export default function Counter(props, el) {
                  count
             ])
         ]),    
-        Array.from({ length: count * 100 }, (_, i) =>
-            h("button", {onclick: () => setCount(count + 1)}, [
-                "+", 
-                h("p", {}, [
-                    a
-                ])
-            ]),        
-        ) , 
-        h("button", {onclick: decrement()}, [
+        h("button", {onclick: () => setCount(count + 1)}, [
+            "+"
+        ]),    
+        h("button", {onclick: () => decrement()}, [
             "-"
         ]),    
         h("p", {}, [
             `Texto: ${text}`
         ]),    
-        Item({a: "hola", b: adios})
+        Array.from({ length: count * 100 }, (_, i) =>
+            Item({a: "hola", b: i}), 
+        )
     ])
     );
 

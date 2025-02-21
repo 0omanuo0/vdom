@@ -21,7 +21,7 @@ def generate_structure(tag, indent=0, other=None):
 
         js_expressions_counter = 0
         
-        # Iterate through children
+        # Iterate through children     
         for child in tag.children:
             if child.name:
                 if other is not None and (child.name.capitalize() in other):
@@ -95,7 +95,7 @@ def parse_script(sc, k, other=None):
     # 5. replace all useState and useEffect with this.useState and this.useEffect
     
 
-    sc = "import { h, Component } from \"../vdom.js\";\n" + str(sc)
+    sc = "import { h, Component } from \"" + path_to_vdom + "\";\n" + str(sc)
 
     index = sc.find("(props, el) {") + len("(props, el) {")
     sc = sc[:index] + "\n    return new Component(props, el, function () {\n" + sc[index:]
@@ -125,6 +125,7 @@ def parse_script(sc, k, other=None):
     return sc
     
 component_name = "Counter"
+path_to_vdom = "../../vdom.js"
 
 # Read the Vue file
 with open(component_name + ".vc", "r", encoding="utf-8") as file:
