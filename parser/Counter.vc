@@ -1,0 +1,29 @@
+<template Counter>
+    <p>Contador: <span id="counter-value">{ count }</span></p>
+    { Array.from({ length: count * 100 }, (_, i) => 
+        <button onclick="() => setCount(count + 1)">
+            +
+            <p>{a}</p>
+        </button>
+    ) }
+    <button onclick="decrement()">-</button>
+    <p>`Texto: ${text}`</p>
+    <Item a="hola" b={adios}>
+</template>
+
+<template Item>
+    <p>
+        {props.a}
+    </p>
+</template>
+
+<script>
+export default function Counter(props, el) {
+    const [count, setCount] = useState(0);
+
+
+    function decrement() {
+        setCount(count - 1);
+    }
+}
+</script>
