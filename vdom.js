@@ -18,11 +18,23 @@ class VNode {
  * @returns {VNode} - A virtual node
  */
 function h(tag, props, ...children) {
-    return new VNode(tag, props, children.flat().map(child => {
-        return typeof child === "string" ? new VNode("#text", {}, child) : child
-    }
-    ));
+    return new VNode(tag, props, children.flat().flatMap(child => {
+        if (Array.isArray(child)) {
+            return child.flatMap(c => 
+                c instanceof VNode ? c : new VNode("#text", {}, c)
+            );  // Flatten nested arrays and convert elements to VNode
+        }
+        else if (child instanceof VNode) {
+            return child;
+        }
+        else if (typeof child === "number") {
+            return new VNode("#text", {}, child.toString());
+        }
+        
+        return new VNode("#text", {}, String(child));
+    }));
 }
+
 
 /**
  * Render function - Converts a Virtual DOM tree into a real DOM tree
@@ -34,6 +46,7 @@ function render(vnode) {
     if (vnode.tag === "#text") {
         const textNode = document.createTextNode(vnode.children);
         vnode.dom = textNode;
+        console.log("text", vnode.children);
         return textNode;
     }
     else if (vnode.tag === "#html") {
