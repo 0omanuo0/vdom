@@ -14,7 +14,10 @@ script_content = soup.find("script")
 
 
 def generate_structure(tag, indent=0):
-    """ Recursively prints tag structure with indentation """
+    """ Recursively prints tag structure with indentation 
+        ### Limitations:
+        - A child can only be a js expression or a text node
+        - JS expressions must be enclosed in curly braces {}"""
     if tag.name:  # Only process valid tags
         t = "h(\"" + tag.name + "\", {"
         for attr in tag.attrs:
